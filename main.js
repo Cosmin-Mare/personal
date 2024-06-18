@@ -35,14 +35,36 @@ scene.add(gridHelper);
 
 const controls = new OrbitControls(camera, renderer.domElement);
 
+const starArray = Array(200).fill().map((value) => addRandomGeometry());
 
 function animate(){
   requestAnimationFrame(animate);
   torus.rotation.x += 0.01;
   torus.rotation.y += 0.01;
 
+  starArray.forEach((star) => {
+    star.rotation.x += 0.03;
+    star.rotation.y += 0.08;
+  });
+
   controls.update();
   renderer.render(scene, camera);
 }
 
 animate();
+
+function addRandomGeometry(){
+  const geometry = new THREE.OctahedronGeometry(1);
+  const material = new THREE.MeshStandardMaterial({ color: 0xFF6347});
+  const torus = new THREE.Mesh(geometry, material);
+
+  const [x, y, z] = Array(3).fill().map(() => THREE.MathUtils.randFloatSpread(100));
+
+  torus.position.set(x, y, z);
+  scene.add(torus);
+  return torus
+}
+
+
+const ambientLight = new THREE.AmbientLight(0xffffff);
+scene.add(ambientLight);
